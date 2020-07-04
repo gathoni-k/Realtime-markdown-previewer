@@ -24,7 +24,7 @@ function App() {
   return (
     <Container fluid>
       <Row>
-        <Col className='pad'>
+        <Col className='pad' xs={12} md={6}>
         <header className='header'>Markdown</header>
           <textarea className='full-height mt-3' id='edit-pad' placeholder='Edit...'></textarea>
         </Col>
