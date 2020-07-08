@@ -91,7 +91,7 @@ export default function Pad() {
           <div className='flex flex-col bg-white max-width p-4 full-height shadow-lg rounded p-2'>
             <h1 className='text-xl font-bold'>{title}</h1>
             <p className='text-sm font-thin italic text-gray-500'>{tags}</p>
-            <ReactMarkdown source={mdText} renderers={{ code: CodeBlock }}/>
+            <ReactMarkdown source={mdText} renderers={{ code: CodeBlock }} className='h-auto'/>
           </div>
         </Tab>
     </Tabs> 
