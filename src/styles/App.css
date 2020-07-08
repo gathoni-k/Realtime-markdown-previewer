@@ -1,0 +1,37 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@300;500&family=Merienda');
+body {
+  background-color: #f6f5f3;
+}
+.full-height {
+  height: 70vh;
+  overflow: auto;
+}
+.full-width {
+  width: 70vw;
+}
+
+.text-flame {
+  color: #eb5e28;
+}
+.border-text-flame {
+  border-color: #eb5e28;
+}
+.bg-flame {
+  background-color: #eb5e28;
+}
+.font-merienda {
+  font-family: 'Merienda', cursive;
+}
+.modal {
+  transition: opacity 0.25s ease;
+  }
+body.modal-active {
+overflow-x: hidden;
+overflow-y: visible !important;
+}
+.opacity-95 {opacity: .95;}
+
+pre {
+  border-left: 3px solid #eb5e28;
+  background-color: black;
+}
