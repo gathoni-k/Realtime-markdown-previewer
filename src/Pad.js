@@ -1,0 +1,101 @@
+import React, {useState} from 'react';
+import Tabs from 'react-bootstrap/Tabs'
+import Tab from 'react-bootstrap/Tab'
+import Modal from 'react-bootstrap/Modal'
+import Alert from './Alert';
+import ReactMarkdown from 'react-markdown';
+import CodeBlock from './CodeBlock'
+
+export default function Pad() {
+
+    const [title, setTitle] = useState('Provide post title')
+    const [tags, setTags] = useState('')
+    const [cover, setCover] = useState('')
+    const [show, setShow] = useState(false);
+    const [alert, setAlert] = useState(false)
+    const [mdText, setMdText] = useState('')
+
+
+    const handleClose = () => setShow(false);
+    const handleShow = () => setShow(true);
+    let data; 
+    const handleSave = () => {
+        const editPad = document.getElementById('edit-pad')
+        let mdText = editPad.value
+        if (title === 'Provide post title') {
+            setAlert(true)
+        } else {
+            setAlert(false)
+        }
+        data = {
+            url: cover,
+            title: title,
+            tags: tags,
+            article: `${mdText}`
+        }
+    }
+    const handlePublish = () => {
+        const editPad = document.getElementById('edit-pad')
+        let mdText = editPad.value
+        data = {
+            url: cover,
+            title: title,
+            tags: tags,
+            article: `${mdText}`,
+            published: true
+        }
+    }
+
+    const updateTitle = (event) => setTitle(event.target.value)   
+    const updateTags = (event) => setTags(event.target.value)
+    const updateCover = (event) => setCover(event.target.value)
+
+   return (
+    <>
+      <Tabs defaultActiveKey="edit" id="edit-pad">
+        <Tab eventKey="edit" title="Edit">
+            <div className='flex flex-col bg-white max-width p-4 full-height shadow-lg'>
+                <button className='bg-flame text-white text-sm p-2 rounded mr-4 w-24 mb-4' onClick={handleShow}>Cover image</button>
+                <Modal show={show} onHide={handleClose}>
+                    <Modal.Header closeButton>
+                    </Modal.Header>
+                    <Modal.Body>
+                    <label className="text-gray-600 font-bold mr-3" htmlFor='title'>
+                        <input className="mr-1 leading-tight appearance-none text-sm sm:text-sm md:text-xl lg:text-2xl xl:text-3xl w-full font-bold" type="text" name='title' placeholder='Cover Image...' onChange={updateCover} value={cover}/>
+                    </label>
+                    </Modal.Body>
+                    <Modal.Footer>
+                    <div  className='bg-flame text-white text-sm p-1 sm:p-1 md:p-2 lg:p-2 xl:p-3 rounded' onClick={handleClose}>
+                        Save
+                    </div>
+                    </Modal.Footer>
+                </Modal>
+                <Alert warn={alert}/>
+
+                <label className="text-gray-600 font-bold mr-3" htmlFor='title'>
+                    <input className="mr-1 leading-tight appearance-none text-sm sm:text-sm md:text-xl lg:text-2xl xl:text-3xl w-full font-bold" type="text" name='title' placeholder={title} onChange={updateTitle}/>
+                </label>
+                <label className="text-gray-600 font-bold mr-3" htmlFor='tags'>
+                    <input className="mr-1 leading-tight appearance-none text-sm italic w-full font-thin" type="text" name='tags' placeholder='Comma separated tags...' onChange={updateTags} value={tags}/>
+                </label>
+                <textarea
+                    className='bg-white w-full mt-2 h-full appearance-none rounded' placeholder='Write post...' id='edit-pad' onChange={(event) => setMdText(event.target.value)}>
+                </textarea>
+            </div>
+            <div className='mt-3 w-full flex justify-center sm:justify-start md:justify-end lg:justify-end xl:justify-end'>
+                <button className='bg-flame text-white text-sm p-1 sm:p-1 md:p-2 lg:p-2 xl:p-2 rounded mr-4' onClick={handleSave}>Save</button>
+                <button className='bg-gray-600 text-white text-sm p-1 sm:p-1 md:p-2 lg:p-2 xl:p-2 rounded mr-4' onClick={handlePublish}>Publish</button>
+            </div>
+        </Tab>
+        <Tab eventKey="preview" title="Preview">
+          <div className='flex flex-col bg-white max-width p-4 full-height shadow-lg rounded p-2'>
+            <h1 className='text-xl font-bold'>{title}</h1>
+            <p className='text-sm font-thin italic text-gray-500'>{tags}</p>
+            <ReactMarkdown source={mdText} renderers={{ code: CodeBlock }}/>
+          </div>
+        </Tab>
+    </Tabs> 
+
+  </>
+   )
+};
