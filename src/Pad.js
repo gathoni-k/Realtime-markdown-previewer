@@ -20,6 +20,13 @@ export default function Pad() {
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
+    const convertTags = (tags) => {
+        let vals = tags.split(',')
+        let arr = vals.map(val => {
+            return val.trim()
+        })
+        return arr
+    }
     let data; 
     const url = 'http://localhost:3000/posts'
     const handleSave = async () => {
@@ -35,12 +42,19 @@ export default function Pad() {
         data = {
             url: cover,
             title: title,
-            tags: tags,
+            tags: convertTags(tags),
             article: `${mdText}`
         }
-        const res = await axios.post(`${url}/new`, data)
-        const id = res.data.post._id
-        setPostId(`${id}`)
+        let res;
+        if (!postId) {
+            res = await axios.post(`${url}/new`, data)
+            console.log(res.data)
+            const id = res.data.post._id
+            setPostId(`${id}`)
+        } else {
+            res = await axios.put(`${url}/${postId}`, data)
+        }
+
         if (res.data.error) {
             setWarning(res.data.message)
             setAlert(true)
@@ -56,7 +70,7 @@ export default function Pad() {
         data = {
             url: cover,
             title: title,
-            tags: tags,
+            tags: convertTags(tags),
             article: `${mdText}`
         }
         let res;
