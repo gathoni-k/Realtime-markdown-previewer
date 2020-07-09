@@ -19,6 +19,9 @@ body {
 .bg-flame {
   background-color: #eb5e28;
 }
+.bg-flame-dark:hover {
+  background-color: #b13;
+}
 .font-merienda {
   font-family: 'Merienda', cursive;
 }
