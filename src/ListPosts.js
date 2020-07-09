@@ -23,7 +23,6 @@ export default function ListPosts({posts}) {
       })
   }
   if (redirect) {
-    console.log(redirect)
     return <Redirect to={redirect} />
   }
   return (
@@ -40,7 +39,10 @@ export default function ListPosts({posts}) {
                 <p className="text-gray-600 text-sm p-1">Last modified on {post.date}</p>
                 <div>
                 <button className='bg-gray-600 hover:bg-gray-700 text-white p-1 sm:p-1 md:p-2 lg:p-2 xl:p-2 rounded mr-4' onClick={() => handleEdit(post._id)}>Edit</button>
-                <button className='bg-gray-600 hover:bg-gray-700 text-white p-1 sm:p-1 md:p-2 lg:p-2 xl:p-2 rounded mr-4' onClick={() => handleArchive(post._id)}>Archive</button>
+                <button className='bg-gray-600 hover:bg-gray-700 text-white p-1 sm:p-1 md:p-2 lg:p-2 xl:p-2 rounded mr-4' onClick={() => {
+                  post.published=false
+                  handleArchive(post._id)
+                }}>Archive</button>
                 </div>
             </div>
             {post.published?(<span className='font-bold text-green-400 text-sm'>Published</span>): (<span className='font-bold text-flame text-sm'>Not published</span>)}
