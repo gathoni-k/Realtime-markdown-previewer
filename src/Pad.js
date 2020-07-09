@@ -26,7 +26,6 @@ export default function Pad({editId}) {
                 if(res.data.error) {
                     setWarning(res.data.error)
                 } 
-                console.log(res.data)
                 if(res.data.post) {
                     setTitle(res.data.post['title'])
                     setCover(res.data.post['url'] || '')
