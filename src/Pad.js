@@ -5,25 +5,30 @@ import Modal from 'react-bootstrap/Modal'
 import Alert from './Alert';
 import ReactMarkdown from 'react-markdown';
 import CodeBlock from './CodeBlock'
+import axios from 'axios'
 
 export default function Pad() {
-
+    const [postId, setPostId] = useState('')
     const [title, setTitle] = useState('Provide post title')
     const [tags, setTags] = useState('')
     const [cover, setCover] = useState('')
     const [show, setShow] = useState(false);
     const [alert, setAlert] = useState(false)
     const [mdText, setMdText] = useState('')
-
+    const [info, setInfo] = useState('')
+    const [warning, setWarning] = useState('')
 
     const handleClose = () => setShow(false);
     const handleShow = () => setShow(true);
     let data; 
-    const handleSave = () => {
+    const url = 'http://localhost:3000/posts'
+    const handleSave = async () => {
         const editPad = document.getElementById('edit-pad')
         let mdText = editPad.value
         if (title === 'Provide post title') {
+            setWarning('Post title not provided!')
             setAlert(true)
+            return
         } else {
             setAlert(false)
         }
@@ -33,16 +38,46 @@ export default function Pad() {
             tags: tags,
             article: `${mdText}`
         }
+        const res = await axios.post(`${url}/new`, data)
+        const id = res.data.post._id
+        setPostId(`${id}`)
+        if (res.data.error) {
+            setWarning(res.data.message)
+            setAlert(true)
+        } else {
+            setInfo(res.data.message)
+            setAlert(true)
+        }
     }
-    const handlePublish = () => {
+    
+    const handlePublish = async () => {
         const editPad = document.getElementById('edit-pad')
         let mdText = editPad.value
         data = {
             url: cover,
             title: title,
             tags: tags,
-            article: `${mdText}`,
-            published: true
+            article: `${mdText}`
+        }
+        let res;
+        if (postId) {
+            const params = {
+                id: postId,
+                post: data
+            }
+            res = await axios.post(`${url}/publish`, params)
+
+        } else {
+            res = await axios.post(`${url}/publish`, {
+                post: data
+            })
+        }
+        if (res.data.error) {
+            setWarning(res.data.message)
+            setAlert(true)
+        } else {
+            setInfo(res.data.message)
+            setAlert(true)
         }
     }
 
@@ -55,7 +90,7 @@ export default function Pad() {
       <Tabs defaultActiveKey="edit" id="edit-pad">
         <Tab eventKey="edit" title="Edit">
             <div className='flex flex-col bg-white max-width p-4 full-height shadow-lg'>
-                <button className='bg-flame text-white text-sm p-2 rounded mr-4 w-24 mb-4' onClick={handleShow}>Cover image</button>
+                <button className='bg-flame text-white text-sm p-2 rounded mr-4 w-24 mb-4 bg-flame-dark' onClick={handleShow}>Cover image</button>
                 <Modal show={show} onHide={handleClose}>
                     <Modal.Header closeButton>
                     </Modal.Header>
@@ -65,12 +100,12 @@ export default function Pad() {
                     </label>
                     </Modal.Body>
                     <Modal.Footer>
-                    <div  className='bg-flame text-white text-sm p-1 sm:p-1 md:p-2 lg:p-2 xl:p-3 rounded' onClick={handleClose}>
+                    <div  className='bg-flame text-white text-sm p-1 sm:p-1 md:p-2 lg:p-2 xl:p-3 rounded bg-flame-dark cursor-pointer' onClick={handleClose}>
                         Save
                     </div>
                     </Modal.Footer>
                 </Modal>
-                <Alert warn={alert}/>
+                <Alert warn={alert} warningMsg={warning} infoMsg={info}/>
 
                 <label className="text-gray-600 font-bold mr-3" htmlFor='title'>
                     <input className="mr-1 leading-tight appearance-none text-sm sm:text-sm md:text-xl lg:text-2xl xl:text-3xl w-full font-bold" type="text" name='title' placeholder={title} onChange={updateTitle}/>
@@ -83,8 +118,8 @@ export default function Pad() {
                 </textarea>
             </div>
             <div className='mt-3 w-full flex justify-center sm:justify-start md:justify-end lg:justify-end xl:justify-end'>
-                <button className='bg-flame text-white text-sm p-1 sm:p-1 md:p-2 lg:p-2 xl:p-2 rounded mr-4' onClick={handleSave}>Save</button>
-                <button className='bg-gray-600 text-white text-sm p-1 sm:p-1 md:p-2 lg:p-2 xl:p-2 rounded mr-4' onClick={handlePublish}>Publish</button>
+                <button className='bg-flame bg-flame-dark text-white text-sm p-1 sm:p-1 md:p-2 lg:p-2 xl:p-2 rounded mr-4' onClick={handleSave}>Save</button>
+                <button className='bg-gray-600 hover:bg-gray-700 text-white text-sm p-1 sm:p-1 md:p-2 lg:p-2 xl:p-2 rounded mr-4' onClick={handlePublish}>Publish</button>
             </div>
         </Tab>
         <Tab eventKey="preview" title="Preview">
